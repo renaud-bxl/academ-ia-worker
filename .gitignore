@@ -1,0 +1,35 @@
+# Rust / Cargo
+target/
+Cargo.lock
+
+# Node.js
+node_modules/
+dist/
+.pnpm-store/
+
+# Tauri
+src-tauri/target/
+src-tauri/WixTools/
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/settings.json
+
+# Secrets
+.env
+.env.local
+*.pem
+*.key
+*.p12
+
+# Build artifacts
+*.exe
+*.dmg
+*.AppImage
+*.deb
+*.rpm
+*.msi

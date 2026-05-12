@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Academ-IA Node</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <circle cx="14" cy="14" r="13" stroke="url(#grad)" stroke-width="2"/>
+            <path d="M8 14L12 18L20 10" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="grad" x1="0" y1="0" x2="28" y2="28">
+                <stop offset="0%" stop-color="#06b6d4"/>
+                <stop offset="100%" stop-color="#8b5cf6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">Academ-IA</span>
+          <span class="logo-subtitle">Node v1.0.0</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+          </svg>
+          <span>Tableau de bord</span>
+        </button>
+        <button class="nav-item" data-page="ollama" onclick="showPage('ollama')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+          </svg>
+          <span>Modèles IA</span>
+        </button>
+        <button class="nav-item" data-page="tunnel" onclick="showPage('tunnel')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>Connexion</span>
+        </button>
+        <button class="nav-item" data-page="settings" onclick="showPage('settings')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span>Paramètres</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-badge" id="global-status">
+          <div class="status-dot"></div>
+          <span>Démarrage...</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+      <!-- Dashboard Page -->
+      <div id="page-dashboard" class="page active">
+        <div class="page-header">
+          <h1>Tableau de bord</h1>
+          <p>Vue d'ensemble de votre nœud Academ-IA</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon ollama-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Ollama</span>
+              <span class="stat-value" id="stat-ollama">Arrêté</span>
+            </div>
+            <div class="stat-status" id="stat-ollama-dot"></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon tunnel-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Plateforme</span>
+              <span class="stat-value" id="stat-tunnel">Déconnecté</span>
+            </div>
+            <div class="stat-status" id="stat-tunnel-dot"></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon models-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Modèles installés</span>
+              <span class="stat-value" id="stat-models">0</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon version-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Version</span>
+              <span class="stat-value" id="stat-version">1.0.0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="glass-card">
+            <h3>Actions rapides</h3>
+            <div class="quick-actions">
+              <button class="btn-action" id="btn-start-ollama" onclick="startOllama()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Démarrer Ollama
+              </button>
+              <button class="btn-action btn-danger" id="btn-stop-ollama" onclick="stopOllama()" style="display:none">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="6" y="6" width="12" height="12"/>
+                </svg>
+                Arrêter Ollama
+              </button>
+              <button class="btn-action" id="btn-connect" onclick="connectTunnel()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                </svg>
+                Connecter à la plateforme
+              </button>
+              <button class="btn-action" onclick="checkUpdates()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+                Vérifier les mises à jour
+              </button>
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <h3>Journal d'activité</h3>
+            <div class="activity-log" id="activity-log">
+              <div class="log-entry info">
+                <span class="log-time">--:--:--</span>
+                <span class="log-msg">Démarrage de Academ-IA Node...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ollama Models Page -->
+      <div id="page-ollama" class="page">
+        <div class="page-header">
+          <h1>Modèles IA</h1>
+          <p>Gérez vos modèles Ollama locaux</p>
+        </div>
+
+        <div class="models-toolbar">
+          <div class="search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" id="model-search" placeholder="Nom du modèle à télécharger..." />
+          </div>
+          <button class="btn-primary" onclick="pullModel()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Télécharger
+          </button>
+          <button class="btn-secondary" onclick="refreshModels()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+            </svg>
+            Actualiser
+          </button>
+        </div>
+
+        <div class="recommended-models">
+          <h3>Modèles recommandés</h3>
+          <div class="model-chips">
+            <button class="model-chip" onclick="setModelSearch('llama3.2:3b')">llama3.2:3b <span>2GB</span></button>
+            <button class="model-chip" onclick="setModelSearch('llama3.2:8b')">llama3.2:8b <span>5GB</span></button>
+            <button class="model-chip" onclick="setModelSearch('mistral:7b')">mistral:7b <span>4GB</span></button>
+            <button class="model-chip" onclick="setModelSearch('phi3:mini')">phi3:mini <span>2.3GB</span></button>
+            <button class="model-chip" onclick="setModelSearch('gemma2:9b')">gemma2:9b <span>5.5GB</span></button>
+            <button class="model-chip" onclick="setModelSearch('qwen2.5:7b')">qwen2.5:7b <span>4.7GB</span></button>
+            <button class="model-chip" onclick="setModelSearch('deepseek-r1:7b')">deepseek-r1:7b <span>4.7GB</span></button>
+            <button class="model-chip" onclick="setModelSearch('nomic-embed-text')">nomic-embed-text <span>274MB</span></button>
+          </div>
+        </div>
+
+        <div id="pull-progress" class="pull-progress" style="display:none">
+          <div class="progress-info">
+            <span id="pull-model-name">Téléchargement...</span>
+            <span id="pull-percent">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="pull-bar"></div>
+          </div>
+        </div>
+
+        <div class="models-list" id="models-list">
+          <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            </svg>
+            <p>Aucun modèle installé</p>
+            <p class="empty-hint">Démarrez Ollama puis téléchargez un modèle ci-dessus</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tunnel / Connection Page -->
+      <div id="page-tunnel" class="page">
+        <div class="page-header">
+          <h1>Connexion à la plateforme</h1>
+          <p>Reliez ce nœud à votre organisation Academ-IA</p>
+        </div>
+
+        <div class="connection-status glass-card" id="connection-card">
+          <div class="connection-visual">
+            <div class="node-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+              </svg>
+              <span>Ce nœud</span>
+            </div>
+            <div class="connection-line" id="conn-line">
+              <div class="conn-dot"></div>
+              <div class="conn-dot"></div>
+              <div class="conn-dot"></div>
+            </div>
+            <div class="node-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+              </svg>
+              <span>Academ-IA Cloud</span>
+            </div>
+          </div>
+          <div class="connection-status-text" id="conn-status-text">Déconnecté</div>
+        </div>
+
+        <div class="glass-card">
+          <h3>Informations de connexion</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>ID Organisation</label>
+              <input type="text" id="org-id" placeholder="org_xxxxxxxxxxxxxxxx" />
+            </div>
+            <div class="form-group">
+              <label>Clé API</label>
+              <input type="password" id="api-key" placeholder="ak_live_..." />
+            </div>
+            <div class="form-group">
+              <label>Nom de ce nœud</label>
+              <input type="text" id="worker-name" placeholder="Serveur-Paris-01" />
+            </div>
+            <div class="form-group">
+              <label>Port Ollama</label>
+              <input type="number" id="ollama-port" value="11434" min="1024" max="65535" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-primary" onclick="saveAndConnect()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+              </svg>
+              Enregistrer et connecter
+            </button>
+            <button class="btn-secondary" onclick="disconnectTunnel()">Déconnecter</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Page -->
+      <div id="page-settings" class="page">
+        <div class="page-header">
+          <h1>Paramètres</h1>
+          <p>Configuration de Academ-IA Node</p>
+        </div>
+
+        <div class="glass-card">
+          <h3>Comportement de l'application</h3>
+          <div class="settings-list">
+            <div class="setting-item">
+              <div class="setting-info">
+                <span class="setting-label">Démarrer Ollama automatiquement</span>
+                <span class="setting-desc">Lance Ollama au démarrage de l'application</span>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="setting-ollama-autostart" checked onchange="saveSetting('ollamaAutoStart', this.checked)" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-item">
+              <div class="setting-info">
+                <span class="setting-label">Lancer au démarrage du système</span>
+                <span class="setting-desc">Démarre automatiquement avec Windows/macOS</span>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="setting-app-autostart" onchange="saveSetting('appAutostart', this.checked)" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-item">
+              <div class="setting-info">
+                <span class="setting-label">Réduire dans la barre des tâches</span>
+                <span class="setting-desc">Minimise dans la zone de notification à la fermeture</span>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="setting-minimize-tray" checked onchange="saveSetting('minimizeToTray', this.checked)" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <h3>À propos</h3>
+          <div class="about-info">
+            <div class="about-row">
+              <span>Version</span>
+              <span class="mono" id="about-version">1.0.0</span>
+            </div>
+            <div class="about-row">
+              <span>Plateforme</span>
+              <span class="mono" id="about-platform">—</span>
+            </div>
+            <div class="about-row">
+              <span>ID Nœud</span>
+              <span class="mono" id="about-worker-id">—</span>
+            </div>
+          </div>
+          <div class="form-actions" style="margin-top: 1rem">
+            <button class="btn-secondary" onclick="checkUpdates()">Vérifier les mises à jour</button>
+            <a href="https://acad-ia-78kiixzl.manus.space" target="_blank" class="btn-link">Ouvrir la plateforme ↗</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
