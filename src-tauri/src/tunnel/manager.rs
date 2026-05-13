@@ -4,7 +4,7 @@ use tauri::{AppHandle, Manager};
 use tokio::sync::Mutex;
 
 use crate::state::AppState;
-use super::{TunnelStatus, WorkerRegistration};
+use super::TunnelStatus;
 
 /// Register this worker with the Academ-IA platform
 pub async fn register_worker(app: &AppHandle) -> Result<()> {
