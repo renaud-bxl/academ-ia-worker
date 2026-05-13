@@ -4,7 +4,7 @@ use tauri::{AppHandle, Manager};
 use tokio::sync::Mutex;
 
 use crate::state::AppState;
-use super::{OllamaStatus, OllamaState};
+use super::OllamaStatus;
 
 const OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
 
@@ -94,7 +94,7 @@ pub async fn start_ollama_process(app: &AppHandle) -> Result<()> {
         .spawn();
 
     match child {
-        Ok(mut process) => {
+        Ok(process) => {
             let pid = process.id();
             {
                 let mut s = state.lock().await;
