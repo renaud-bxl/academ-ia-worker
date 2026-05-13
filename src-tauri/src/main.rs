@@ -6,7 +6,11 @@ mod tunnel;
 mod updater;
 mod state;
 
-use tauri::{Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, CustomMenuItem};
+use tauri::{
+    Manager,
+    menu::{Menu, MenuItem},
+    tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
+};
 use state::AppState;
 use std::sync::Arc;
 use tokio::sync::Mutex;
@@ -19,39 +23,7 @@ fn main() {
         )
         .init();
 
-    // Build system tray
-    let tray_menu = SystemTrayMenu::new()
-        .add_item(CustomMenuItem::new("show".to_string(), "Ouvrir Academ-IA Node"))
-        .add_item(CustomMenuItem::new("status".to_string(), "Statut: Démarrage..."))
-        .add_item(CustomMenuItem::new("separator".to_string(), "---"))
-        .add_item(CustomMenuItem::new("quit".to_string(), "Quitter"));
-
-    let tray = SystemTray::new().with_menu(tray_menu);
-
     tauri::Builder::default()
-        .system_tray(tray)
-        .on_system_tray_event(|app, event| match event {
-            SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
-                "show" => {
-                    if let Some(window) = app.get_window("main") {
-                        window.show().unwrap();
-                        window.set_focus().unwrap();
-                    }
-                }
-                "quit" => {
-                    std::process::exit(0);
-                }
-                _ => {}
-            },
-            SystemTrayEvent::DoubleClick { .. } => {
-                if let Some(window) = app.get_window("main") {
-                    window.show().unwrap();
-                    window.set_focus().unwrap();
-                }
-            }
-            _ => {}
-        })
-        .manage(Arc::new(Mutex::new(AppState::default())))
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_autostart::init(
@@ -60,6 +32,7 @@ fn main() {
         ))
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_store::Builder::default().build())
+        .manage(Arc::new(Mutex::new(AppState::default())))
         .invoke_handler(tauri::generate_handler![
             ollama::commands::get_ollama_status,
             ollama::commands::start_ollama,
@@ -75,7 +48,44 @@ fn main() {
             state::commands::save_config,
         ])
         .setup(|app| {
-            let app_handle = app.handle();
+            // Build system tray menu
+            let show_item = MenuItem::with_id(app, "show", "Ouvrir Academ-IA Node", true, None::<&str>)?;
+            let quit_item = MenuItem::with_id(app, "quit", "Quitter", true, None::<&str>)?;
+            let menu = Menu::with_items(app, &[&show_item, &quit_item])?;
+
+            // Create tray icon
+            let _tray = TrayIconBuilder::new()
+                .menu(&menu)
+                .menu_on_left_click(false)
+                .on_menu_event(|app, event| match event.id.as_ref() {
+                    "show" => {
+                        if let Some(window) = app.get_webview_window("main") {
+                            let _ = window.show();
+                            let _ = window.set_focus();
+                        }
+                    }
+                    "quit" => {
+                        std::process::exit(0);
+                    }
+                    _ => {}
+                })
+                .on_tray_icon_event(|tray, event| {
+                    if let TrayIconEvent::Click {
+                        button: MouseButton::Left,
+                        button_state: MouseButtonState::Up,
+                        ..
+                    } = event
+                    {
+                        let app = tray.app_handle();
+                        if let Some(window) = app.get_webview_window("main") {
+                            let _ = window.show();
+                            let _ = window.set_focus();
+                        }
+                    }
+                })
+                .build(app)?;
+
+            let app_handle = app.handle().clone();
 
             // Start background services
             tauri::async_runtime::spawn(async move {

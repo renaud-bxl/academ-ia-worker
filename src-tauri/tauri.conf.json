@@ -81,26 +81,21 @@
       "deb": {
         "depends": []
       },
-      "rpm": {
-        "license": "Proprietary"
-      },
       "appimage": {
         "bundleMediaFramework": true
       }
-    },
-    "updater": {
-      "active": true,
-      "dialog": true,
-      "pubkey": "",
-      "endpoints": [
-        "https://acad-ia-78kiixzl.manus.space/api/worker/update/{{target}}/{{arch}}/{{current_version}}"
-      ]
     }
   },
   "plugins": {
     "autostart": {
       "mobile": false,
       "desktop": true
+    },
+    "updater": {
+      "pubkey": "",
+      "endpoints": [
+        "https://acad-ia-78kiixzl.manus.space/api/worker/update/{{target}}/{{arch}}/{{current_version}}"
+      ]
     }
   }
 }
