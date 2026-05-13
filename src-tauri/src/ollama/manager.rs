@@ -191,7 +191,7 @@ pub async fn list_models() -> Result<Vec<super::ModelInfo>> {
 }
 
 /// Pull (download) an Ollama model
-pub async fn pull_model(model_name: &str, app: &AppHandle) -> Result<()> {
+pub async fn pull_model(model_name: &str, _app: &AppHandle) -> Result<()> {
     let client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(3600)) // 1 hour for large models
         .build()?;
